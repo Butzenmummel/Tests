@@ -1,0 +1,31 @@
+//-------------------------------------------------------------------------
+// This file is part of the Unit Test Demonstration project.
+// It contains the applib module page of the generated documentation.
+//-------------------------------------------------------------------------
+//
+//    Copyright (C) 2016-2021  Herbert Thielen <thielen@hs-worms.de>
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//-------------------------------------------------------------------------
+
+
+/** 
+\defgroup   g_applib  Application Library: Keep it testable.
+
+As far as possible, functionality should be kept in libraries instead of
+the \link g_main main() function \endlink, because by this it is much
+easier to test them in \link g_unittests unit tests \endlink.
+
+*/
+// vim: syntax=c++.doxygen sw=2

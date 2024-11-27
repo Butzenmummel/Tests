@@ -1,0 +1,34 @@
+//-------------------------------------------------------------------------
+// This file is part of the catch2 cmake project.
+// It contains the main module page of the generated documentation.
+//-------------------------------------------------------------------------
+//
+//    Copyright (C) 2016-2020  Herbert Thielen <thielen@hs-worms.de>
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//-------------------------------------------------------------------------
+
+
+/** 
+\defgroup   g_main  Minimalistic: Application main()
+
+The main() function should be kept as small as possible, because it is
+hard to test.
+
+The main() function's responsibility is the software configuration and
+startup: Create the necessary objects, connect them and start the main
+loop (if any).
+
+*/
+// vim: syntax=c++.doxygen sw=2

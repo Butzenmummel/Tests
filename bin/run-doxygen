@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# Create documentation with doxygen.
+#
+# Copyright 2012-2021 Herbert Thielen
+#
+# This file is part of the program 'koelner-phonetik',
+# see https://gitlab.ai.it.hs-worms.de/swq/23s/koelner-phonetik
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+DOXYFILE=doc/doxygen/Doxyfile
+OUTPUT=doc/doxygen/project-number.dox
+
+if [ ! -r "$DOXYFILE" ]; then
+    echo >&2 "Expecting to be started from project root directory,"
+    echo >&2 "i.e. \"$DOXYFILE\" must be available"
+    echo >&2 "Note: PWD is currently \"$PWD\""
+    exit 1
+fi
+
+# e.g. V0.7-12-g6c5af99
+SCM_REVISION=$(git describe --tags --dirty --always --long | tr ' ' '_')
+[ -n "$SCM_REVISION" ] || exit 1
+echo "PROJECT_NUMBER = $SCM_REVISION" > "$OUTPUT"
+
+doxygen "$DOXYFILE"

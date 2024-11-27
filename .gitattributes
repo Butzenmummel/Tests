@@ -1,2 +1,3 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# avoid conversion of LF to CRLF on line endings, as bash doesn't like this
+bin/create-buildtag -text
+bin/run-doxygen -text

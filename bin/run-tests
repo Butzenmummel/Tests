@@ -1,0 +1,77 @@
+#!/bin/bash
+#
+# Run unit tests and create coverage information.
+#
+# Copyright 2021 Herbert Thielen
+#
+# This file is part of the program 'koelner-phonetik',
+# see https://gitlab.ai.it.hs-worms.de/swq/23s/koelner-phonetik
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# The unit test has to be built with --coverage, e.g. via:
+# cd build; cmake CONFIG+=debug ../src/hellotest.pro; make
+
+set -e					# exit on error
+
+PROJ_ROOT=$PWD
+BUILD_DIR=build				# base build directory
+SUT=src/app-lib				# software under test
+UTEST="$BUILD_DIR/unit-test"		# unit test executable
+OUTPUT_DIR="coverage-html"              # relative to $BUILD_DIR
+
+if [ ! -r "$UTEST" ]; then
+    echo >&2 "Expecting to be started from project root directory after build,"
+    echo >&2 "i.e. 'build/unit-test' must be available, e.g. built with"
+    echo >&2 "cd build; cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_VERBOSE_MAKEFILE=True ..; make unit-test"
+    echo >&2 "Note: PWD is currently <$PWD>"
+    exit 1
+fi
+
+find "$BUILD_DIR" -name "*.gcda" -exec rm "{}" ";"
+
+# execute unit test and create coverage data
+"$UTEST"
+
+# coverage analysis results will be stored in the build directory
+cd "$BUILD_DIR"
+
+echo
+echo "Running $(gcov --version|head -1) on coverage data files in $PWD:"
+OIFS=$IFS		# save
+IFS=$'\n'		# file names might contain spaces
+while read filename; do
+    ls -ld "$filename"
+    # the generated *.gcov files may be used by gcovr, see .gitlab-ci.yml
+    gcov --source-prefix="$PROJ_ROOT" --relative-only --preserve-paths --branch-counts --branch-probabilities "$filename"
+done < <(find "$SUT" -name "*.gcno")
+IFS=$OIFS		# restore
+
+echo
+echo "Running $(lcov --version) on coverage data in $PWD:"
+lcov --base-directory "$PROJ_ROOT" --no-external --capture --directory "$SUT" --output-file coverage.info
+lcov --list coverage.info
+
+# generate nice coverage listings as HTML
+# e.g. V0.7-12-g6c5af99
+SCM_REVISION=$(git describe --tags --dirty --always --long | tr ' ' '_')
+[ -n "$SCM_REVISION" ] || exit 1
+
+echo
+echo "Generating HTML data with genhtml:"
+genhtml coverage.info --legend --title "version $SCM_REVISION" --output-directory "$OUTPUT_DIR"
+
+echo
+echo "You may view the generated HTML files with:"
+echo "xdg-open $BUILD_DIR/$OUTPUT_DIR/index.html"
